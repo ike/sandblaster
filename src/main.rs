@@ -1,3 +1,6 @@
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+
 extern crate reqwest;
 extern crate regex;
 use reqwest::Client;
@@ -13,7 +16,7 @@ enum GetError {
 }
 
 impl From<reqwest::Error> for GetError {
-    fn from(e: reqwest::Error) -> GetError {
+    fn from(_e: reqwest::Error) -> GetError {
         GetError::ReqwestError
     }
 }
@@ -46,12 +49,21 @@ fn get(domain: &str) -> Result<(), GetError> {
 }
 
 fn email_scraper(content: String) {
-    println!("Emails found: \n");
-
-    let expr = Regex::new(r"\A[^@]+@([^@\.]+\.)+[^@\.]+\z").unwrap();
+    // println!("{:#?}", content);
+    let expr = Regex::new(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?").unwrap();
     let captures = expr.captures(&content);
 
-    for cap in captures {
-        println!("{:#?}, \n", cap);
+    match captures {
+        None => {
+            println!("Emails found: {:?}", 0);
+        }
+        Some(captures) => {
+            let captures_iter = captures.iter();
+            for cap in captures_iter {
+                if let Some(cap) = cap {
+                    println!("{:?}", cap.as_str());
+                }
+            }
+        }
     }
 }
