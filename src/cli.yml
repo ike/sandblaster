@@ -1,0 +1,20 @@
+name: Sandblaster
+version: "0.1"
+author: Isaac Lewis <isaac@ike.io>
+about: CLI / Microservice Web Scraper
+args:
+    - domains:
+        short: d
+        long: domains
+        value_name: DOMAINS
+        help: Sets list of starting domains
+        takes_value: true
+# subcommands:
+#     - test:
+#         about: controls testing features
+#         version: "1.3"
+#         author: Someone E. <someone_else@other.com>
+#         args:
+#             - debug:
+#                 short: d
+#                 help: print debug information

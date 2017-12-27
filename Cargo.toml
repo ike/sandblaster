@@ -1,0 +1,9 @@
+[package]
+name = "email-scraper"
+version = "0.1.0"
+authors = ["Isaac Lewis <isaac@ike.io>"]
+
+[dependencies]
+reqwest = "0.8.2"
+clap = {version = "2.29.0", features = ["yaml"]}
+regex = "0.2"
