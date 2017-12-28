@@ -27,43 +27,53 @@ fn main() {
 
     let domain = matches.value_of("domains").unwrap_or("http://ike.io");
 
-    get(domain);
+    let results = get(domain);
+
+    match results {
+        Ok(results) => println!("{:?}", results),
+        Err(e) => panic!
+    }
 }
 
-fn get(domain: &str) -> Result<(), GetError> {
+fn get(domain: &str) -> Result<Vec<String>, GetError> {
     let client = Client::new();
 
     let mut resp = client.get(domain).send()?;
     let content = resp.text();
+    let mut emails = Vec::new();
 
     match resp.status() {
         StatusCode::Ok => {
             match content {
-                Ok(content) => email_scraper(content),
-                Err(e) => println!("error parsing content: {:?}", e)
+                Ok(content) => {
+                    emails = email_scraper(content);
+                },
+                Err(e) => Err(e)
             }
         }
-        s => println!("Received response status: {:?}", s)
+        status => println!("Received response status: {:?}", status)
     };
-    Ok(())
+
+    match emails {
+        Ok(emails) => Ok(emails),
+        Err(e) => Err(e)
+    }
 }
 
-fn email_scraper(content: String) {
+fn email_scraper(content: String) -> std::vec::Vec<std::string::String> {
     // println!("{:#?}", content);
     let expr = Regex::new(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?").unwrap();
-    let captures = expr.captures(&content);
+    let captures = expr.find_iter(&content);
+    let mut emails = Vec::new();
 
-    match captures {
-        None => {
-            println!("Emails found: {:?}", 0);
-        }
-        Some(captures) => {
-            let captures_iter = captures.iter();
-            for cap in captures_iter {
-                if let Some(cap) = cap {
-                    println!("{:?}", cap.as_str());
-                }
-            }
-        }
+    for cap in captures {
+        emails.push(cap.as_str());
+    }
+
+    emails.dedup();
+
+    match emails {
+        Ok(emails) => Ok(emails),
+        Err(e) => Err(e)
     }
 }
