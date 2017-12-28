@@ -9,6 +9,15 @@ args:
         value_name: DOMAINS
         help: Sets list of starting domains
         takes_value: true
+        multiple: true
+
+    - scrapers:
+        short: s
+        long: scrapers
+        value_name: SCRAPERS
+        help: List of scrapers to run
+        takes_value: true
+        multiple: true
 # subcommands:
 #     - test:
 #         about: controls testing features

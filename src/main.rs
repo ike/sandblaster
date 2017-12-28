@@ -12,9 +12,10 @@ fn main() {
     let yaml = load_yaml!("cli.yml");
     let matches = App::from_yaml(yaml).get_matches();
 
-    let domain = matches.value_of("domains").unwrap();
+    let domains: Vec<&str> = matches.values_of("domains").unwrap().collect();
+    let scrapers: Vec<&str> = matches.values_of("scrapers").unwrap().collect();
 
-    let results = domain::get(domain);
+    let results = domain::get(domains, scrapers);
 
     match results {
         Ok(results) => println!("{:?}", results),

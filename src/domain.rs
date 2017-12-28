@@ -14,22 +14,24 @@ impl From<reqwest::Error> for GetError {
     }
 }
 
-pub fn get(domain: &str) -> Result<Vec<String>, GetError> {
+pub fn get(domains: Vec<&str>, scrapers: Vec<&str>) -> Result<Vec<String>, GetError> {
     let client = Client::new();
-
-    let mut resp = client.get(domain).send()?;
-    let content = resp.text();
     let mut emails = Vec::new();
 
-    match resp.status() {
-        StatusCode::Ok => {
-            match content {
-                Ok(content) => emails = email_scraper::run(content),
-                Err(error) => panic!("{:?}", error)
+    for domain in domains {
+        let mut resp = client.get(domain).send()?;
+        let content = resp.text();
+
+        match resp.status() {
+            StatusCode::Ok => {
+                match content {
+                    Ok(content) => emails.extend(email_scraper::run(content).iter().cloned()),
+                    Err(error) => panic!("{:?}", error)
+                }
             }
-        }
-        status => panic!("{:?}", status)
-    };
+            status => panic!("{:?}", status)
+        };
+    }
 
     Ok(emails)
 }
