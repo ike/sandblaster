@@ -11,8 +11,16 @@ use regex::Regex;
 extern crate clap;
 use clap::App;
 
+#[derive(Debug)]
 enum GetError {
-    ReqwestError
+    ReqwestError,
+    ContentError,
+    StatusError
+}
+
+#[derive(Debug)]
+enum ScraperError {
+    ScrapeError
 }
 
 impl From<reqwest::Error> for GetError {
@@ -31,7 +39,7 @@ fn main() {
 
     match results {
         Ok(results) => println!("{:?}", results),
-        Err(e) => panic!
+        Err(error) => panic!("{:?}", error)
     }
 }
 
@@ -45,35 +53,26 @@ fn get(domain: &str) -> Result<Vec<String>, GetError> {
     match resp.status() {
         StatusCode::Ok => {
             match content {
-                Ok(content) => {
-                    emails = email_scraper(content);
-                },
-                Err(e) => Err(e)
+                Ok(content) => emails = email_scraper(content).unwrap(),
+                Err(error) => panic!("{:?}", error)
             }
         }
-        status => println!("Received response status: {:?}", status)
+        status => panic!("{:?}", status)
     };
 
-    match emails {
-        Ok(emails) => Ok(emails),
-        Err(e) => Err(e)
-    }
+    Ok(emails)
 }
 
-fn email_scraper(content: String) -> std::vec::Vec<std::string::String> {
-    // println!("{:#?}", content);
+fn email_scraper(content: String) -> Result<Vec<String>, ScraperError> {
     let expr = Regex::new(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?").unwrap();
     let captures = expr.find_iter(&content);
     let mut emails = Vec::new();
 
     for cap in captures {
-        emails.push(cap.as_str());
+        emails.push(String::from(cap.as_str()));
     }
 
     emails.dedup();
 
-    match emails {
-        Ok(emails) => Ok(emails),
-        Err(e) => Err(e)
-    }
+    Ok(emails)
 }
