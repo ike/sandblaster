@@ -1,10 +1,11 @@
 extern crate regex;
-use self::regex::Regex;
-
 use regex_scraper;
 
-pub struct EmailScraper {
-    expression: Regex::new(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
-}
+pub struct EmailScraper { }
 
-impl Capture for EmailScraper {}
+impl regex_scraper::Capture for EmailScraper {
+    fn expression(&self) -> regex::Regex {
+        let regex = regex::Regex::new(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+        regex.unwrap()
+    }
+}
