@@ -1,5 +1,5 @@
 extern crate regex;
-use regex_scraper;
+use scrapers::regex_scraper;
 
 pub struct EmailScraper { }
 

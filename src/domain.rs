@@ -1,8 +1,9 @@
 extern crate reqwest;
 use self::reqwest::Client;
 use self::reqwest::StatusCode;
-use email_scraper;
-use regex_scraper::Capture;
+
+use scrapers;
+use scrapers::regex_scraper::Capture;
 
 #[derive(Debug)]
 pub enum GetError {
@@ -34,7 +35,7 @@ pub fn get(domains: Vec<&str>, scrapers: Vec<&str>) -> Result<Vec<String>, GetEr
         };
 
         // TODO: spool up all scrapers and send content to them
-        results.extend(email_scraper::EmailScraper::run(&email_scraper::EmailScraper { }, content));
+        results.extend(scrapers::email_scraper::EmailScraper::run(&scrapers::email_scraper::EmailScraper { }, content));
     }
 
     Ok(results)

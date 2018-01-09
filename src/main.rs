@@ -2,8 +2,7 @@
 #![cfg_attr(feature="clippy", plugin(clippy))]
 
 mod domain;
-mod regex_scraper;
-mod email_scraper;
+mod scrapers;
 
 #[macro_use]
 extern crate clap;
