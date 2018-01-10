@@ -34,7 +34,13 @@ pub fn get(domains: Vec<&str>, scrapers: Vec<&str>) -> Result<Vec<String>, GetEr
         };
 
         // TODO: spool up all scrapers and send content to them
-        results.extend(scrapers::email_scraper::execute(content));
+        for scraper in scrapers {
+            let scraper_enum = scraper.parse::<scrapers::Scrapers>();
+            match scraper_enum {
+                Ok(scraper_enum) => results.extend(scraper_enum.execute(content)),
+                Err(error) => panic!("{:?}", error)
+            }
+        }
     }
 
     Ok(results)
