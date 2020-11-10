@@ -12,6 +12,8 @@ impl regex_scraper::Capture for EmailScraper {
     }
 }
 
-pub fn execute(content: String) -> Vec<String> {
-    self::EmailScraper::run(&scrapers::email_scraper::EmailScraper { }, content)
+impl scrapers::Execute for EmailScraper {
+    fn execute(content: String) -> Vec<String> {
+        self::EmailScraper::run(&scrapers::email_scraper::EmailScraper { }, content)
+    }
 }

@@ -4,7 +4,15 @@ pub mod email_scraper;
 use std::str::FromStr;
 
 pub enum Scrapers {
-    email(email_scraper::EmailScraper)
+    EmailScraper
+}
+
+pub trait Execute {
+    fn execute(content: String) -> Vec<String> {
+        let mut results = Vec::new();
+
+        results
+    }
 }
 
 impl FromStr for Scrapers {
@@ -12,7 +20,7 @@ impl FromStr for Scrapers {
 
     fn from_str(s: &str) -> Result<Scrapers, ()> {
         match s {
-            "email" => Ok(self::Scrapers::email),
+            "email" => Ok(Scrapers::EmailScraper),
             _ => Err(()),
         }
     }

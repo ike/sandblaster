@@ -24,7 +24,7 @@ pub fn get(domains: Vec<&str>, scrapers: Vec<&str>) -> Result<Vec<String>, GetEr
         let mut resp = client.get(domain).send()?;
 
         match resp.status() {
-            StatusCode::Ok => {
+            StatusCode::OK => {
                 match resp.text() {
                     Ok(text) => content = text,
                     Err(error) => panic!("{:?}", error)
