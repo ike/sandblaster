@@ -4,11 +4,11 @@ use scrapers::ScraperType;
 use scrapers::regex_scraper;
 use scrapers::regex_scraper::Capture;
 
-pub struct EmailScraper { }
+pub struct PhoneScraper { }
 
-impl regex_scraper::Capture for EmailScraper {
+impl regex_scraper::Capture for PhoneScraper {
     fn expression(&self) -> regex::Regex {
-        let regex = regex::Regex::new(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+        let regex = regex::Regex::new(r"/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i");
         regex.unwrap()
     }
 }
@@ -16,6 +16,6 @@ impl regex_scraper::Capture for EmailScraper {
 impl scrapers::Execute for ScraperType {
     fn execute<'a>(&'a self, content: &'a String) -> Vec<String> {
         let c: String = content.clone();
-        self::EmailScraper::run(&scrapers::email_scraper::EmailScraper { }, c)
+        self::PhoneScraper::run(&scrapers::phone_scraper::PhoneScraper { }, c)
     }
 }

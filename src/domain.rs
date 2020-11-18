@@ -2,7 +2,8 @@ extern crate reqwest;
 use self::reqwest::Client;
 use self::reqwest::StatusCode;
 
-use scrapers;
+use scrapers::Execute;
+use scrapers::ScraperType;
 
 #[derive(Debug)]
 pub enum GetError {
@@ -34,7 +35,7 @@ pub fn get<'a>(domains: Vec<&str>, scrapers: Vec<&'a str>) -> Result<Vec<String>
         };
 
         for scraper in &scrapers {
-            let scraper_enum = scraper.parse::<scrapers::Scrapers>();
+            let scraper_enum = scraper.parse::<ScraperType>();
             match scraper_enum {
                 Ok(scraper_enum) => results.extend(scraper_enum.execute(&content)),
                 Err(error) => panic!("{:?}", error)

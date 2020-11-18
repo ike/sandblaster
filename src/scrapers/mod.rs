@@ -3,25 +3,27 @@ pub mod email_scraper;
 
 use std::str::FromStr;
 
-pub enum Scrapers {
-    EmailScraper
+pub enum ScraperType {
+    EmailScraper,
+    PhoneScraper
 }
 
-impl Scrapers {
-    pub fn execute<'a>(&'a self, content: &'a String) -> Vec<String> {
-        let c: String = content.clone();
-        let results: Vec<String> = vec![c];
+// This will probably come in handy later
+//pub struct Scrapers {
+//  scraper_type: ScraperType
+//}
 
-        results
-    }
+pub trait Execute {
+    fn execute<'a>(&'a self, content: &'a String) -> Vec<String>;
 }
 
-impl FromStr for Scrapers {
+impl FromStr for ScraperType {
     type Err = ();
 
-    fn from_str(s: &str) -> Result<Scrapers, ()> {
+    fn from_str(s: &str) -> Result<ScraperType, ()> {
         match s {
-            "email" => Ok(Scrapers::EmailScraper),
+            "email" => Ok(ScraperType::EmailScraper),
+            "phone" => Ok(ScraperType::PhoneScraper),
             _ => Err(()),
         }
     }
