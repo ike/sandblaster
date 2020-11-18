@@ -12,7 +12,7 @@ impl regex_scraper::Capture for EmailScraper {
     }
 }
 
-impl scrapers::Execute for EmailScraper {
+impl EmailScraper {
     fn execute(content: String) -> Vec<String> {
         self::EmailScraper::run(&scrapers::email_scraper::EmailScraper { }, content)
     }

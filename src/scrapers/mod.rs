@@ -7,9 +7,10 @@ pub enum Scrapers {
     EmailScraper
 }
 
-pub trait Execute {
-    fn execute(content: String) -> Vec<String> {
-        let mut results = Vec::new();
+impl Scrapers {
+    pub fn execute<'a>(&'a self, content: &'a String) -> Vec<String> {
+        let c: String = content.clone();
+        let results: Vec<String> = vec![c];
 
         results
     }

@@ -15,10 +15,10 @@ impl From<reqwest::Error> for GetError {
     }
 }
 
-pub fn get(domains: Vec<&str>, scrapers: Vec<&str>) -> Result<Vec<String>, GetError> {
+pub fn get<'a>(domains: Vec<&str>, scrapers: Vec<&'a str>) -> Result<Vec<String>, GetError> {
     let client = Client::new();
     let mut results = Vec::new();
-    let mut content = String::new();
+    let mut content: String;
 
     for domain in domains {
         let mut resp = client.get(domain).send()?;
@@ -33,11 +33,10 @@ pub fn get(domains: Vec<&str>, scrapers: Vec<&str>) -> Result<Vec<String>, GetEr
             status => panic!("{:?}", status)
         };
 
-        // TODO: spool up all scrapers and send content to them
-        for scraper in scrapers {
+        for scraper in &scrapers {
             let scraper_enum = scraper.parse::<scrapers::Scrapers>();
             match scraper_enum {
-                Ok(scraper_enum) => results.extend(scraper_enum.execute(content)),
+                Ok(scraper_enum) => results.extend(scraper_enum.execute(&content)),
                 Err(error) => panic!("{:?}", error)
             }
         }
